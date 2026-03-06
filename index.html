@@ -3,179 +3,123 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Takuto Konishi | Football Style Profile</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;500;700&display=swap" rel="stylesheet">
+<title>Toilet Game</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Noto Sans JP',sans-serif}
-
 body{
-height:100vh;
+margin:0;
+background:#2c3e50;
+font-family:sans-serif;
 display:flex;
+flex-direction:column;
 align-items:center;
 justify-content:center;
-background:
-linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.9)),
-linear-gradient(90deg,#1f7a34 0%,#2fa84f 50%,#1f7a34 100%);
+height:100vh;
 color:white;
 }
 
-.container{
-width:520px;
-background:rgba(0,0,0,0.55);
-border-radius:20px;
-padding:40px;
-box-shadow:0 0 40px rgba(0,0,0,0.8);
-position:relative;
-overflow:hidden;
+h1{margin-bottom:10px}
+
+canvas{
+background:#34495e;
+border:4px solid white;
+border-radius:10px;
 }
 
-.container:before{
-content:"";
-position:absolute;
-inset:0;
-background-image:repeating-linear-gradient(
-90deg,
-transparent,
-transparent 48px,
-rgba(255,255,255,0.08) 50px
-);
-opacty:0.2;
-pointer-events:none;
-}
-
-.title{
+.info{
+margin-top:10px;
 font-size:14px;
-letter-spacing:4px;
-color:#aaa;
-margin-bottom:10px;
 }
-
-.name{
-font-size:38px;
-font-weight:700;
-letter-spacing:2px;
-margin-bottom:8px;
-}
-
-.tag{
-font-size:14px;
-color:#6cff9c;
-margin-bottom:30px;
-}
-
-.section{
-margin:22px 0;
-}
-
-.section h3{
-font-size:13px;
-letter-spacing:3px;
-color:#bbb;
-margin-bottom:6px;
-}
-
-.section p{
-font-size:17px;
-line-height:1.6;
-}
-
-.stats{
-display:flex;
-justify-content:space-between;
-margin-top:30px;
-}
-
-.stat{
-text-align:center;
-}
-
-.stat-number{
-font-size:26px;
-font-weight:700;
-color:#6cff9c;
-}
-
-.stat-label{
-font-size:12px;
-color:#aaa;
-letter-spacing:2px;
-}
-
-.footer{
-margin-top:30px;
-font-size:12px;
-text-align:center;
-color:#777;
-letter-spacing:2px;
-}
-
-.glow{
-position:absolute;
-width:300px;
-height:300px;
-background:radial-gradient(circle,#2cff88,transparent 70%);
-filter:blur(120px);
-opacty:0.25;
-top:-80px;
-right:-80px;
-}
-
 </style>
 </head>
-
 <body>
 
-<div class="container">
+<h1>🚽 Toilet Catch Game 🚽</h1>
 
-<div class="glow"></div>
+<canvas id="game" width="600" height="400"></canvas>
 
-<div class="title">FOOTBALL PROFILE</div>
-<div class="name">TAKUTO KONISHI</div>
-<div class="tag">Playmaker of My Own Story ⚽</div>
+<div class="info">← → キーでトイレを動かしてトイレットペーパーをキャッチ</div>
 
-<div class="section">
-<h3>NAME</h3>
-<p>小西 拓翔</p>
-</div>
+<script>
+const canvas = document.getElementById("game")
+const ctx = canvas.getContext("2d")
 
-<div class="section">
-<h3>PLAY STYLE</h3>
-<p>
-好奇心で前に運ぶドリブラー。<br>
-面白い場所・人・経験をゴールに向かって攻め続ける。
-</p>
-</div>
+let toilet = {
+ x:260,
+ y:340,
+ w:80,
+ h:40,
+ speed:6
+}
 
-<div class="section">
-<h3>INTEREST</h3>
-<p>Football / Travel / Fashion / Friends</p>
-</div>
+let paper = {
+ x:Math.random()*560,
+ y:0,
+ size:20,
+ speed:3
+}
 
-<div class="stats">
+let score = 0
 
-<div class="stat">
-<div class="stat-number">10</div>
-<div class="stat-label">VISION</div>
-</div>
+let keys = {}
 
-<div class="stat">
-<div class="stat-number">9</div>
-<div class="stat-label">SPEED</div>
-</div>
+document.addEventListener("keydown",e=>keys[e.key]=true)
+document.addEventListener("keyup",e=>keys[e.key]=false)
 
-<div class="stat">
-<div class="stat-number">11</div>
-<div class="stat-label">CREATIVITY</div>
-</div>
+function resetPaper(){
+ paper.x = Math.random()*560
+ paper.y = 0
+}
 
-</div>
+function update(){
 
-<div class="footer">
-STADIUM MODE | TAKUTO KONISHI
-</div>
+ if(keys["ArrowLeft"]) toilet.x -= toilet.speed
+ if(keys["ArrowRight"]) toilet.x += toilet.speed
 
-</div>
+ if(toilet.x < 0) toilet.x = 0
+ if(toilet.x + toilet.w > canvas.width) toilet.x = canvas.width - toilet.w
+
+ paper.y += paper.speed
+
+ if(
+ paper.y + paper.size > toilet.y &&
+ paper.x > toilet.x &&
+ paper.x < toilet.x + toilet.w
+ ){
+ score++
+ resetPaper()
+ }
+
+ if(paper.y > canvas.height){
+ resetPaper()
+ }
+}
+
+function draw(){
+ ctx.clearRect(0,0,canvas.width,canvas.height)
+
+ ctx.fillStyle = "white"
+ ctx.font = "20px sans-serif"
+ ctx.fillText("Score: " + score, 10, 25)
+
+ // toilet
+ ctx.fillStyle = "#ecf0f1"
+ ctx.fillRect(toilet.x,toilet.y,toilet.w,toilet.h)
+
+ // falling paper
+ ctx.fillStyle = "#ffffff"
+ ctx.fillRect(paper.x,paper.y,paper.size,paper.size)
+}
+
+function gameLoop(){
+ update()
+ draw()
+ requestAnimationFrame(gameLoop)
+}
+
+gameLoop()
+</script>
 
 </body>
 </html>
+
 
