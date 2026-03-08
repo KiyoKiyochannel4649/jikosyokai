@@ -2,149 +2,116 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cute Girl Candy Game</title>
+<title>小西拓翔 | PROFILE</title>
+
 <style>
 body{
-margin:0;
-background:linear-gradient(#ffd6ec,#ffc0e6);
-font-family:sans-serif;
-display:flex;
-flex-direction:column;
-align-items:center;
-justify-content:center;
-height:100vh;
-color:#444;
+    margin:0;
+    font-family: "Arial", sans-serif;
+    background: linear-gradient(120deg,#0f2027,#203a43,#2c5364);
+    color:white;
 }
 
-h1{margin-bottom:10px}
-
-canvas{
-background:#fff0f8;
-border:4px solid #ff8ac2;
-border-radius:12px;
+header{
+    text-align:center;
+    padding:60px;
 }
 
-.info{
-margin-top:10px;
-font-size:14px;
+h1{
+    font-size:60px;
+    letter-spacing:5px;
+}
+
+.subtitle{
+    font-size:20px;
+    color:#00ffcc;
+}
+
+.container{
+    width:80%;
+    margin:auto;
+}
+
+.card{
+    background:rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    padding:30px;
+    margin:30px 0;
+    border-radius:15px;
+    transition:0.3s;
+}
+
+.card:hover{
+    transform:scale(1.05);
+    background:rgba(255,255,255,0.2);
+}
+
+h2{
+    color:#00ffcc;
+}
+
+.skill{
+    background:#00ffcc;
+    color:black;
+    padding:5px 15px;
+    border-radius:20px;
+    margin:5px;
+    display:inline-block;
+    font-weight:bold;
+}
+
+footer{
+    text-align:center;
+    padding:20px;
+    margin-top:40px;
+    background:rgba(0,0,0,0.3);
 }
 </style>
+
 </head>
+
 <body>
 
-<h1>🎀 Cute Candy Catch 🎀</h1>
+<header>
+<h1>TAKUTO KONISHI</h1>
+<p class="subtitle">⚽ Jリーグ風サッカー少年プロフィール ⚽</p>
+</header>
 
-<canvas id="game" width="600" height="400"></canvas>
+<div class="container">
 
-<div class="info">← → キーで女の子を動かしてキャンディを集めよう</div>
+<div class="card">
+<h2>👤 自己紹介</h2>
+<p>
+こんにちは！小西拓翔です。<br>
+サッカーが大好きで、いつも全力プレーをしています！<br>
+将来はすごい選手になるのが目標です。
+</p>
+</div>
 
-<script>
-const canvas = document.getElementById("game")
-const ctx = canvas.getContext("2d")
+<div class="card">
+<h2>⚽ 好きなこと</h2>
+<span class="skill">サッカー</span>
+<span class="skill">ゲーム</span>
+<span class="skill">友達と遊ぶ</span>
+<span class="skill">スポーツ</span>
+</div>
 
-let girl = {
- x:280,
- y:320,
- w:40,
- h:60,
- speed:6
-}
+<div class="card">
+<h2>🎯 目標</h2>
+<p>
+・サッカーがもっと上手くなる<br>
+・有名な選手みたいにかっこよくプレーする<br>
+・毎日楽しく過ごす！
+</p>
+</div>
 
-let candy = {
- x:Math.random()*580,
- y:0,
- size:20,
- speed:3
-}
+</div>
 
-let score = 0
-
-let keys = {}
-
-document.addEventListener("keydown",e=>keys[e.key]=true)
-document.addEventListener("keyup",e=>keys[e.key]=false)
-
-function resetCandy(){
- candy.x = Math.random()*580
- candy.y = 0
-}
-
-function update(){
-
- if(keys["ArrowLeft"]) girl.x -= girl.speed
- if(keys["ArrowRight"]) girl.x += girl.speed
-
- if(girl.x < 0) girl.x = 0
- if(girl.x + girl.w > canvas.width) girl.x = canvas.width - girl.w
-
- candy.y += candy.speed
-
- if(
- candy.y + candy.size > girl.y &&
- candy.x > girl.x &&
- candy.x < girl.x + girl.w
- ){
- score++
- resetCandy()
- }
-
- if(candy.y > canvas.height){
- resetCandy()
- }
-}
-
-function drawGirl(){
- // body
- ctx.fillStyle = "#ff8ac2"
- ctx.fillRect(girl.x, girl.y+20, girl.w, girl.h-20)
-
- // head
- ctx.beginPath()
- ctx.arc(girl.x+20, girl.y+10, 10, 0, Math.PI*2)
- ctx.fillStyle = "#ffe0cc"
- ctx.fill()
-
- // eyes
- ctx.fillStyle = "#333"
- ctx.fillRect(girl.x+15,girl.y+8,3,3)
- ctx.fillRect(girl.x+22,girl.y+8,3,3)
-
- // smile
- ctx.beginPath()
- ctx.arc(girl.x+20,girl.y+12,5,0,Math.PI)
- ctx.stroke()
-}
-
-function drawCandy(){
- ctx.fillStyle = "#ff5fa2"
- ctx.beginPath()
- ctx.arc(candy.x, candy.y, candy.size/2, 0, Math.PI*2)
- ctx.fill()
-}
-
-function draw(){
- ctx.clearRect(0,0,canvas.width,canvas.height)
-
- ctx.fillStyle = "#444"
- ctx.font = "20px sans-serif"
- ctx.fillText("Score: " + score, 10, 25)
-
- drawGirl()
- drawCandy()
-}
-
-function gameLoop(){
- update()
- draw()
- requestAnimationFrame(gameLoop)
-}
-
-gameLoop()
-</script>
+<footer>
+<p>© TAKUTO KONISHI</p>
+</footer>
 
 </body>
 </html>
-
 
 
